@@ -1,27 +1,60 @@
-body {
+/* Reset */
+* {
   margin: 0;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  font-family: system-ui, sans-serif;
-  color: white;
-  background: black;
-  text-align: center;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.gradient {
-  position: fixed;
+html, body {
+  height: 100%;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Gradient Background */
+.gradient-bg {
+  position: absolute;
   inset: 0;
+  background: linear-gradient(135deg, #ff6a00, #ee0979);
   z-index: -1;
-  background: linear-gradient(120deg, #ff0080, #7928ca, #2af598);
-  background-size: 200% 200%;
-  animation: shift 8s ease infinite;
 }
 
-@keyframes shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+/* Overlay (glass style) */
+.overlay {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  padding: 20px 30px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid;
+  border-image: linear-gradient(-60deg, #ddd 100%, #fff 0%, #fff 0%, #ddd 100%) 1;
+  backdrop-filter: blur(130px);
+  box-shadow: 0 3px 140px rgba(0,0,0,0.6);
+  border-radius: 12px;
+  color: #000;
+}
+
+.overlay h1 {
+  font-size: 20px;
+  font-weight: 400;
+  margin-bottom: 12px;
+}
+
+button {
+  background: #000;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  background: #333;
+}
+
+#message {
+  margin-top: 10px;
+  font-size: 14px;
 }
