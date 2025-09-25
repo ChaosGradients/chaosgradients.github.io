@@ -1,60 +1,91 @@
-/* Reset */
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-html, body {
-  height: 100%;
-  font-family: 'Poppins', sans-serif;
+body {
+    font-family: 'Poppins', sans-serif;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
 }
 
-/* Gradient Background */
-.gradient-bg {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, #ff6a00, #ee0979);
-  z-index: -1;
+#gradient-container {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    background: linear-gradient(45deg, #4a154b, #2d1b69, #0f4c75, #3282b8, #bbe1fa);
+    background-size: 400% 400%;
+    animation: gradientShift 10s ease infinite;
 }
 
-/* Overlay (glass style) */
-.overlay {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  padding: 20px 30px;
-  background: rgba(255, 255, 255, 0.14);
-  border: 1px solid;
-  border-image: linear-gradient(-60deg, #ddd 100%, #fff 0%, #fff 0%, #ddd 100%) 1;
-  backdrop-filter: blur(130px);
-  box-shadow: 0 3px 140px rgba(0,0,0,0.6);
-  border-radius: 12px;
-  color: #000;
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
-.overlay h1 {
-  font-size: 20px;
-  font-weight: 400;
-  margin-bottom: 12px;
+.floating-panel {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.14);
+    border-radius: 55px;
+    padding: 20px;
+    backdrop-filter: blur(130px);
+    border: 1px solid;
+    border-image: linear-gradient(-60deg, 
+        rgba(221, 221, 221, 1) 0%, 
+        rgba(255, 255, 255, 0) 18%, 
+        rgba(255, 255, 255, 0) 88%, 
+        rgba(221, 221, 221, 1) 100%) 1;
+    box-shadow: 0 3px 140px rgba(0, 0, 0, 0.6);
+    cursor: move;
+    user-select: none;
 }
 
-button {
-  background: #000;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  font-size: 16px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: 0.2s;
+#export-panel {
+    bottom: 50px;
+    left: 50px;
 }
 
-button:hover {
-  background: #333;
+.panel-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 0;
+    color: white;
+    font-size: 20px;
+    font-weight: 400;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
 }
 
-#message {
-  margin-top: 10px;
-  font-size: 14px;
+.panel-item:hover {
+    opacity: 0.7;
+}
+
+.icon {
+    width: 20px;
+    text-align: center;
+}
+
+.color-stop {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    background: white;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease;
+}
+
+.color-stop:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+.color-stop.dragging {
+    transform: translate(-50%, -50%) scale(1.2);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
 }
