@@ -1,14 +1,21 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chaos Gradients</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="gradient"></div>
-  <h1>Chaos Gradients 🌈</h1>
-  <p>Drag, drop, and break some colors soon…</p>
+  <div class="gradient-bg" id="gradient"></div>
+
+  <div class="overlay">
+    <h1>Chaos Gradients</h1>
+    <button id="copyBtn">Copy CSS</button>
+    <p id="message"></p>
+  </div>
+
   <script src="script.js"></script>
 </body>
 </html>
