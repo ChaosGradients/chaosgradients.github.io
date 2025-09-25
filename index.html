@@ -1,21 +1,36 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chaos Gradients</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chaos Gradient Generator</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="gradient-bg" id="gradient"></div>
-
-  <div class="overlay">
-    <h1>Chaos Gradients</h1>
-    <button id="copyBtn">Copy CSS</button>
-    <p id="message"></p>
-  </div>
-
-  <script src="script.js"></script>
+    <div id="gradient-container">
+        <div id="gradient-stops"></div>
+    </div>
+    
+    <div id="export-panel" class="floating-panel">
+        <div class="panel-item">
+            <span class="icon">⬇</span>
+            <span>Export as image</span>
+        </div>
+        <div class="panel-item">
+            <span class="icon">📋</span>
+            <span>Copy CSS</span>
+        </div>
+        <div class="panel-item">
+            <span class="icon">♡</span>
+            <span>Save to favourites</span>
+        </div>
+        <div class="panel-item">
+            <span class="icon">🔗</span>
+            <span>Copy link</span>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
 </body>
 </html>
