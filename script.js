@@ -1,4 +1,4 @@
-class ChaosGradientGenerator {
+ChaosGradientGenerator {
     constructor() {
         this.container = document.getElementById('gradient-container');
         this.stopsContainer = document.getElementById('gradient-stops');
@@ -62,13 +62,14 @@ class ChaosGradientGenerator {
     }
     
     updateGradient() {
-        const sortedStops = [...this.colorStops].sort((a, b) => a.position - b.position);
-        const gradientString = sortedStops
-            .map(stop => `${stop.color} ${stop.position}%`)
-            .join(', ');
-        
-        this.container.style.background = `linear-gradient(45deg, ${gradientString})`;
-    }
+    const sortedStops = [...this.colorStops].sort((a, b) => a.position - b.position);
+    const gradientString = sortedStops
+        .map(stop => `${stop.color} ${stop.position}%`)
+        .join(', ');
+    
+    this.container.style.background = `linear-gradient(45deg, ${gradientString})`;
+    console.log('Updated gradient:', `linear-gradient(45deg, ${gradientString})`); // Debug line
+}
     
     makePanelsDraggable() {
         const panels = document.querySelectorAll('.floating-panel');
@@ -139,4 +140,3 @@ class ChaosGradientGenerator {
 // Initialize the app
 document.addEventListener('DOMContentLoaded', () => {
     new ChaosGradientGenerator();
-});
