@@ -6,6 +6,7 @@
     <title>Chaos Gradient Generator</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/feather-icons"></script>
 </head>
 <body>
     <div id="gradient-container">
@@ -13,20 +14,20 @@
     </div>
     
     <div id="export-panel" class="floating-panel">
-        <div class="panel-item">
-            <span class="icon">⬇</span>
+        <div class="panel-item" data-action="export-image">
+            <i data-feather="download"></i>
             <span>Export as image</span>
         </div>
-        <div class="panel-item">
-            <span class="icon">📋</span>
+        <div class="panel-item" data-action="copy-css">
+            <i data-feather="clipboard"></i>
             <span>Copy CSS</span>
         </div>
-        <div class="panel-item">
-            <span class="icon">♡</span>
+        <div class="panel-item" data-action="save-favourites">
+            <i data-feather="heart"></i>
             <span>Save to favourites</span>
         </div>
-        <div class="panel-item">
-            <span class="icon">🔗</span>
+        <div class="panel-item" data-action="copy-link">
+            <i data-feather="link"></i>
             <span>Copy link</span>
         </div>
     </div>
