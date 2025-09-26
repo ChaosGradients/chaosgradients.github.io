@@ -9,6 +9,8 @@ body {
     overflow: hidden;
     height: 100vh;
     width: 100vw;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 #gradient-container {
@@ -28,40 +30,34 @@ body {
 
 .floating-panel {
     position: absolute;
-    background: rgba(255, 255, 255, 0.14);
     border-radius: 55px;
     padding: 20px;
-    backdrop-filter: blur(130px);
-    -webkit-backdrop-filter: blur(130px); /* Safari support */
-    box-shadow: 
-        0 3px 140px rgba(0, 0, 0, 0.6),
-        inset 0 0 0 1px rgba(255, 255, 255, 0.1);
     cursor: move;
     user-select: none;
-    /* Fallback for browsers that don't support backdrop-filter */
-    background-image: 
+    /* iOS-compatible blur effect using multiple layered backgrounds */
+    background: 
         linear-gradient(-60deg, 
-            rgba(221, 221, 221, 0.3) 0%, 
-            rgba(255, 255, 255, 0.05) 18%, 
-            rgba(255, 255, 255, 0.05) 82%, 
-            rgba(221, 221, 221, 0.3) 100%);
-}
-
-/* Add a pseudo-element for the gradient border */
-.floating-panel::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    padding: 1px;
-    background: linear-gradient(-60deg, 
-        rgba(221, 221, 221, 1) 0%, 
-        rgba(255, 255, 255, 0) 18%, 
-        rgba(255, 255, 255, 0) 82%, 
-        rgba(221, 221, 221, 1) 100%);
-    border-radius: inherit;
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    mask-composite: xor;
-    -webkit-mask-composite: xor;
+            rgba(221, 221, 221, 0.4) 0%, 
+            rgba(255, 255, 255, 0.1) 18%, 
+            rgba(255, 255, 255, 0.1) 82%, 
+            rgba(221, 221, 221, 0.4) 100%),
+        rgba(255, 255, 255, 0.14);
+    
+    /* iOS Safari compatible backdrop blur */
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    
+    /* Enhanced shadow for better visibility on iOS */
+    box-shadow: 
+        0 3px 140px rgba(0, 0, 0, 0.6),
+        0 0 0 1px rgba(255, 255, 255, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    
+    /* Fallback for browsers without backdrop-filter support */
+    @supports not (backdrop-filter: blur(1px)) {
+        background: rgba(255, 255, 255, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
 }
 
 #export-panel {
@@ -73,28 +69,27 @@ body {
     display: flex;
     align-items: center;
     gap: 15px;
-    padding: 12px 0;
-    color: rgba(255, 255, 255, 0.9);
+    padding: 12px 8px;
+    color: rgba(255, 255, 255, 0.95);
     font-size: 20px;
     font-weight: 400;
     cursor: pointer;
     transition: all 0.2s ease;
     border-radius: 12px;
-    padding-left: 8px;
-    padding-right: 8px;
     position: relative;
     z-index: 1;
 }
 
 .panel-item:hover {
     color: rgba(255, 255, 255, 1);
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateX(2px);
 }
 
-.icon {
+.panel-item i {
     width: 20px;
-    text-align: center;
-    font-size: 18px;
+    height: 20px;
+    stroke-width: 2;
 }
 
 .color-stop {
@@ -104,17 +99,29 @@ body {
     background: white;
     border-radius: 50%;
     cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 
+        0 2px 8px rgba(0, 0, 0, 0.3),
+        0 0 0 2px rgba(255, 255, 255, 0.8);
     transform: translate(-50%, -50%);
-    transition: transform 0.1s ease;
+    transition: all 0.1s ease;
     z-index: 10;
 }
 
 .color-stop:hover {
     transform: translate(-50%, -50%) scale(1.1);
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.4),
+        0 0 0 3px rgba(255, 255, 255, 0.9);
 }
 
 .color-stop.dragging {
     transform: translate(-50%, -50%) scale(1.2);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    box-shadow: 
+        0 6px 20px rgba(0, 0, 0, 0.5),
+        0 0 0 4px rgba(255, 255, 255, 1);
+}
+
+/* Ensure touch events work on iOS */
+.floating-panel, .color-stop {
+    touch-action: none;
 }
