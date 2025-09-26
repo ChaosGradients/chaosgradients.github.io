@@ -1,4 +1,4 @@
-ChaosGradientGenerator {
+class ChaosGradientGenerator {
     constructor() {
         this.container = document.getElementById('gradient-container');
         this.stopsContainer = document.getElementById('gradient-stops');
@@ -17,6 +17,11 @@ ChaosGradientGenerator {
         this.updateGradient();
         this.makePanelsDraggable();
         this.bindEvents();
+        
+        // Initialize Feather icons
+        if (typeof feather !== 'undefined') {
+            feather.replace();
+        }
     }
     
     renderColorStops() {
@@ -37,39 +42,58 @@ ChaosGradientGenerator {
     makeStopDraggable(element, index) {
         let isDragging = false;
         
-        element.addEventListener('mousedown', (e) => {
-            isDragging = true;
-            element.classList.add('dragging');
-            e.preventDefault();
-        });
+        // Mouse events
+        element.addEventListener('mousedown', this.startDrag.bind(this, element, index));
         
-        document.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
-            
-            const rect = this.container.getBoundingClientRect();
-            const x = ((e.clientX - rect.left) / rect.width) * 100;
-            const clampedX = Math.max(0, Math.min(100, x));
-            
-            element.style.left = `${clampedX}%`;
-            this.colorStops[index].position = clampedX;
-            this.updateGradient();
-        });
+        // Touch events for mobile
+        element.addEventListener('touchstart', this.startDrag.bind(this, element, index), { passive: false });
         
-        document.addEventListener('mouseup', () => {
-            isDragging = false;
-            element.classList.remove('dragging');
-        });
+        document.addEventListener('mousemove', this.drag.bind(this, element, index));
+        document.addEventListener('touchmove', this.drag.bind(this, element, index), { passive: false });
+        
+        document.addEventListener('mouseup', this.endDrag.bind(this, element));
+        document.addEventListener('touchend', this.endDrag.bind(this, element));
+    }
+    
+    startDrag(element, index, e) {
+        this.isDragging = true;
+        this.currentElement = element;
+        this.currentIndex = index;
+        element.classList.add('dragging');
+        e.preventDefault();
+    }
+    
+    drag(element, index, e) {
+        if (!this.isDragging || this.currentElement !== element) return;
+        
+        const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+        const rect = this.container.getBoundingClientRect();
+        const x = ((clientX - rect.left) / rect.width) * 100;
+        const clampedX = Math.max(0, Math.min(100, x));
+        
+        element.style.left = `${clampedX}%`;
+        this.colorStops[index].position = clampedX;
+        this.updateGradient();
+        
+        e.preventDefault();
+    }
+    
+    endDrag(element) {
+        this.isDragging = false;
+        if (this.currentElement) {
+            this.currentElement.classList.remove('dragging');
+            this.currentElement = null;
+        }
     }
     
     updateGradient() {
-    const sortedStops = [...this.colorStops].sort((a, b) => a.position - b.position);
-    const gradientString = sortedStops
-        .map(stop => `${stop.color} ${stop.position}%`)
-        .join(', ');
-    
-    this.container.style.background = `linear-gradient(45deg, ${gradientString})`;
-    console.log('Updated gradient:', `linear-gradient(45deg, ${gradientString})`); // Debug line
-}
+        const sortedStops = [...this.colorStops].sort((a, b) => a.position - b.position);
+        const gradientString = sortedStops
+            .map(stop => `${stop.color} ${stop.position}%`)
+            .join(', ');
+        
+        this.container.style.background = `linear-gradient(45deg, ${gradientString})`;
+    }
     
     makePanelsDraggable() {
         const panels = document.querySelectorAll('.floating-panel');
@@ -78,44 +102,86 @@ ChaosGradientGenerator {
             let isDragging = false;
             let startX, startY, startLeft, startTop;
             
-            panel.addEventListener('mousedown', (e) => {
+            const startDrag = (e) => {
+                // Only drag if clicking on the panel itself, not the buttons
+                if (e.target.closest('.panel-item')) return;
+                
                 isDragging = true;
-                startX = e.clientX;
-                startY = e.clientY;
-                startLeft = parseInt(panel.style.left || getComputedStyle(panel).left);
-                startTop = parseInt(panel.style.top || getComputedStyle(panel).top);
+                const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+                const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+                
+                startX = clientX;
+                startY = clientY;
+                
+                const rect = panel.getBoundingClientRect();
+                startLeft = rect.left;
+                startTop = rect.top;
+                
                 panel.style.cursor = 'grabbing';
                 e.preventDefault();
-            });
+            };
             
-            document.addEventListener('mousemove', (e) => {
+            const drag = (e) => {
                 if (!isDragging) return;
                 
-                const deltaX = e.clientX - startX;
-                const deltaY = e.clientY - startY;
+                const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+                const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+                
+                const deltaX = clientX - startX;
+                const deltaY = clientY - startY;
                 
                 panel.style.left = `${startLeft + deltaX}px`;
                 panel.style.top = `${startTop + deltaY}px`;
                 panel.style.bottom = 'auto';
                 panel.style.right = 'auto';
-            });
+                
+                e.preventDefault();
+            };
             
-            document.addEventListener('mouseup', () => {
+            const endDrag = () => {
                 isDragging = false;
                 panel.style.cursor = 'move';
-            });
+            };
+            
+            // Mouse events
+            panel.addEventListener('mousedown', startDrag);
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('mouseup', endDrag);
+            
+            // Touch events
+            panel.addEventListener('touchstart', startDrag, { passive: false });
+            document.addEventListener('touchmove', drag, { passive: false });
+            document.addEventListener('touchend', endDrag);
         });
     }
     
     bindEvents() {
         // Click to add color stops
         this.container.addEventListener('click', (e) => {
-            if (e.target.classList.contains('color-stop')) return;
+            if (e.target.classList.contains('color-stop') || e.target.closest('.floating-panel')) return;
             
             const rect = this.container.getBoundingClientRect();
             const x = ((e.clientX - rect.left) / rect.width) * 100;
             
-            // Generate a random color for chaos!
+            const randomColor = this.generateRandomColor();
+            
+            this.colorStops.push({
+                position: x,
+                color: randomColor
+            });
+            
+            this.renderColorStops();
+            this.updateGradient();
+        });
+        
+        // Touch support for adding stops
+        this.container.addEventListener('touchend', (e) => {
+            if (e.target.classList.contains('color-stop') || e.target.closest('.floating-panel')) return;
+            
+            const rect = this.container.getBoundingClientRect();
+            const touch = e.changedTouches[0];
+            const x = ((touch.clientX - rect.left) / rect.width) * 100;
+            
             const randomColor = this.generateRandomColor();
             
             this.colorStops.push({
@@ -140,3 +206,4 @@ ChaosGradientGenerator {
 // Initialize the app
 document.addEventListener('DOMContentLoaded', () => {
     new ChaosGradientGenerator();
+});
